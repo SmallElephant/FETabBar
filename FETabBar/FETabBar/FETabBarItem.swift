@@ -18,6 +18,8 @@ class FETabBarItem: UIView {
 
     var imageName: String?
     var selectedImageName: String?
+    var image: UIImage?
+    var selectedImage: UIImage?
     var title: String?
     var titleFont: UIFont?
     var titleColor: UIColor?
@@ -27,7 +29,8 @@ class FETabBarItem: UIView {
     var isSelected: Bool = false
     var imageView: UIImageView = UIImageView()
     var titleLabel: UILabel = UILabel()
-    var space: Float = 5.0
+    var space: CGFloat = 5.0
+    var labelHeight: CGFloat = 15.0
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -68,18 +71,23 @@ class FETabBarItem: UIView {
     
     func updateUI() {
         switchState(state: .normal)
-        self.imageView.snp.makeConstraints({ (make) in
-            make.top.equalTo(5)
-            make.width.equalTo(20)
-            make.height.equalTo(20)
-            make.centerX.equalTo(self.snp.centerX).offset(0)
-        })
-        self.titleLabel.snp.makeConstraints({ (make) in
-            make.top.equalTo(imageView.snp.bottom).offset(5)
-            make.left.equalTo(0)
-            make.right.equalTo(0)
-            make.height.equalTo(15)
-        })
+        if let size = self.imageView.image?.size {
+            let width: CGFloat = size.width
+            let height: CGFloat = size.height
+            let top: CGFloat = (self.frame.size.height - height - space - labelHeight) / 2
+            self.imageView.snp.makeConstraints({ (make) in
+                make.top.equalTo(top)
+                make.width.equalTo(width)
+                make.height.equalTo(height)
+                make.centerX.equalTo(self.snp.centerX).offset(0)
+            })
+            self.titleLabel.snp.makeConstraints({ (make) in
+                make.top.equalTo(imageView.snp.bottom).offset(5)
+                make.left.equalTo(0)
+                make.right.equalTo(0)
+                make.height.equalTo(labelHeight)
+            })
+        }
     }
     
     func setup() {
