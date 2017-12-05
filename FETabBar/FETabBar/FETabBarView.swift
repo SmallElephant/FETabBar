@@ -14,6 +14,7 @@ import UIKit
 
 class FETabBarView: UIView {
 
+    var selectedIndex: Int = 0
     var _items: [FETabBarItem] = []
     var items: [FETabBarItem] {
         get {
@@ -40,6 +41,23 @@ class FETabBarView: UIView {
     func updateItem(index: Int) {
         
     }
+    
+    @objc func changeItemStatus(gesture: UITapGestureRecognizer) {
+        if let index = gesture.view?.tag {
+            if index >= 0 && index < items.count {
+                let tabItem: FETabBarItem = self.items[index]
+                if !tabItem.isSelected {
+                    tabItem.switchState(state: .selected)
+                }
+                for i in 0..<items.count {
+                    if i != index && tabItem.isSelected  {
+                        let item: FETabBarItem = self.items[i]
+                        item.switchState(state: .normal)
+                    }
+                }
+            }
+        }
+    }
 
     func update(originalTabs: [FETabBarItem], newTabs: [FETabBarItem]) {
         for tabItem in originalTabs {
@@ -49,9 +67,11 @@ class FETabBarView: UIView {
             let width: CGFloat = self.frame.size.width / (CGFloat)(newTabs.count)
             for i in 0..<newTabs.count {
                 let tabItem = newTabs[i]
-                var frame: CGRect = tabItem.frame
-                frame.origin.x = (CGFloat)(i - 1) * width
-                frame.size.width = width
+                tabItem.frame = CGRect(x: (CGFloat)(i) * width, y: 0, width: width, height: self.frame.size.height)
+                let tap: UITapGestureRecognizer = UITapGestureRecognizer()
+                tap.addTarget(self, action: #selector(changeItemStatus(gesture:)))
+                tabItem.addGestureRecognizer(tap)
+                tabItem.updateUI()
                 self.addSubview(tabItem)
             }
         }
