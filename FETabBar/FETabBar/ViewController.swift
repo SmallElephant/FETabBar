@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController,FETabBarDelegate {
 
     var testButton: UIButton = UIButton(type: .custom)
     var tabBarView: FETabBarView = FETabBarView()
@@ -25,6 +25,10 @@ class ViewController: UIViewController {
     
     @objc func changeEvent(button: UIButton) {
         print("点击事件")
+    }
+    
+    func tabBar(_ tabBar: FETabBarView, didSelect item: FETabBarItem) {
+        print("当前点击对象的索引:\(item.tag)")
     }
 
     func setup() {
@@ -45,6 +49,7 @@ class ViewController: UIViewController {
         }
         self.tabBarView.frame = CGRect(x: 0, y: 200, width: UIScreen.main.bounds.size.width, height: 50)
         self.tabBarView.backgroundColor = .red
+        self.tabBarView.delegate = self
         self.tabBarView.items = items
         self.view.addSubview(self.tabBarView)
         self.testButton.setTitle("测试", for: .normal)

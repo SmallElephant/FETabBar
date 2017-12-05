@@ -8,13 +8,14 @@
 
 import UIKit
 
-@objc protocol FETabBarDelegate : NSObjectProtocol {
+@objc protocol FETabBarDelegate {
     @objc optional func tabBar(_ tabBar: FETabBarView, didSelect item: FETabBarItem)
 }
 
 class FETabBarView: UIView {
 
     var selectedIndex: Int = 0
+    weak open var delegate: FETabBarDelegate?
     var _items: [FETabBarItem] = []
     var items: [FETabBarItem] {
         get {
@@ -39,22 +40,24 @@ class FETabBarView: UIView {
     }
 
     func updateItem(index: Int) {
-        
     }
     
     @objc func changeItemStatus(gesture: UITapGestureRecognizer) {
         if let index = gesture.view?.tag {
             if index >= 0 && index < items.count {
                 let tabItem: FETabBarItem = self.items[index]
-                if !tabItem.isSelected {
-                    tabItem.switchState(state: .selected)
+                if tabItem.isSelected {
+                    return
                 }
+                self.selectedIndex = index
+                tabItem.switchState(state: .selected)
                 for i in 0..<items.count {
                     if i != index && tabItem.isSelected  {
                         let item: FETabBarItem = self.items[i]
                         item.switchState(state: .normal)
                     }
                 }
+                self.delegate?.tabBar?(self, didSelect: tabItem)
             }
         }
     }
