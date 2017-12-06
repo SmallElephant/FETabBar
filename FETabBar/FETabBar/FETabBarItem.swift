@@ -97,5 +97,4 @@ class FETabBarItem: UIView {
         self.titleLabel.textAlignment = .center
         self.addSubview(self.titleLabel)
     }
-
 }

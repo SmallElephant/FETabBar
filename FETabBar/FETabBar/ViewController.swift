@@ -25,6 +25,7 @@ class ViewController: UIViewController,FETabBarDelegate {
     
     @objc func changeEvent(button: UIButton) {
         print("点击事件")
+        self.tabBarView.switchItem(index: 3)
     }
     
     func tabBar(_ tabBar: FETabBarView, didSelect item: FETabBarItem) {

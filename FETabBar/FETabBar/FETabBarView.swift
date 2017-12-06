@@ -39,29 +39,34 @@ class FETabBarView: UIView {
         super.init(frame: frame)
     }
 
-    func updateItem(index: Int) {
+    func switchItem(index: Int) {
+        self.updateItem(index: index)
     }
     
     @objc func changeItemStatus(gesture: UITapGestureRecognizer) {
         if let index = gesture.view?.tag {
-            if index >= 0 && index < items.count {
-                let tabItem: FETabBarItem = self.items[index]
-                if tabItem.isSelected {
-                    return
-                }
-                self.selectedIndex = index
-                tabItem.switchState(state: .selected)
-                for i in 0..<items.count {
-                    if i != index && tabItem.isSelected  {
-                        let item: FETabBarItem = self.items[i]
-                        item.switchState(state: .normal)
-                    }
-                }
-                self.delegate?.tabBar?(self, didSelect: tabItem)
-            }
+            self.updateItem(index: index)
         }
     }
-
+    
+    func updateItem(index: Int) {
+        if index >= 0 && index < items.count {
+            let tabItem: FETabBarItem = self.items[index]
+            if tabItem.isSelected {
+                return
+            }
+            self.selectedIndex = index
+            tabItem.switchState(state: .selected)
+            for i in 0..<items.count {
+                if i != index && tabItem.isSelected  {
+                    let item: FETabBarItem = self.items[i]
+                    item.switchState(state: .normal)
+                }
+            }
+            self.delegate?.tabBar?(self, didSelect: tabItem)
+        }
+    }
+    
     func update(originalTabs: [FETabBarItem], newTabs: [FETabBarItem]) {
         for tabItem in originalTabs {
             tabItem.removeFromSuperview()
